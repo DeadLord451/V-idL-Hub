@@ -1,0 +1,537 @@
+-- ==============================================================================
+-- VøidLø Hub V2.0 - Doors (Custom) | Loadstring Builder Format
+-- ==============================================================================
+
+local LoadstringCode = [[
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+
+if PlayerGui:FindFirstChild("VoidLoHubCustom") then
+    PlayerGui.VoidLoHubCustom:Destroy()
+end
+
+getgenv().VoidLoSettings = {
+    RainbowESP = false,
+    Essentials = {
+        WalkSpeedEnabled = false,
+        WalkSpeedLevel = 20,
+    },
+    ESP = {
+        Entities = false,
+        Doors = false,
+        Objectives = false,
+        Items = false,
+        Chests = false,
+        HidingSpots = false,
+        Players = false,
+    },
+    Tracers = {
+        Entities = false,
+        Doors = false,
+        Objectives = false,
+        Items = false,
+        Chests = false,
+        HidingSpots = false,
+    },
+    Bypass = {
+        Screech = false,
+        Eyes = false,
+        Dupe = false,
+        Timothy = false,
+        LookMan = false,
+        Void = false,
+    },
+    Removals = {
+        Screech = false,
+        Dread = false,
+        Surge = false,
+        Void = false,
+    },
+    Protection = {
+        Screech = false,
+        A90 = false,
+        Void = false,
+        Surge = false,
+    }
+}
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "VoidLoHubCustom"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 580, 0, 360)
+MainFrame.Position = UDim2.new(0.5, -290, 0.5, -180)
+MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner", MainFrame)
+MainCorner.CornerRadius = UDim.new(0, 8)
+
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Color = Color3.fromRGB(0, 120, 255)
+MainStroke.Thickness = 1.5
+
+local TopBar = Instance.new("Frame", MainFrame)
+TopBar.Size = UDim2.new(1, 0, 0, 35)
+TopBar.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TopBar.BorderSizePixel = 0
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 8)
+
+local TitleLabel = Instance.new("TextLabel", TopBar)
+TitleLabel.Size = UDim2.new(1, -20, 1, 0)
+TitleLabel.Position = UDim2.new(0, 15, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "VøidLø Hub V2.0 | Doors (Custom)"
+TitleLabel.TextColor3 = Color3.fromRGB(0, 160, 255)
+TitleLabel.TextSize = 14
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local Sidebar = Instance.new("ScrollingFrame", MainFrame)
+Sidebar.Size = UDim2.new(0, 150, 1, -45)
+Sidebar.Position = UDim2.new(0, 5, 0, 40)
+Sidebar.BackgroundTransparency = 1
+Sidebar.CanvasSize = UDim2.new(0, 0, 1.8, 0)
+Sidebar.ScrollBarThickness = 3
+
+local UIListLayout = Instance.new("UIListLayout", Sidebar)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 6)
+
+local ContentArea = Instance.new("Frame", MainFrame)
+ContentArea.Size = UDim2.new(1, -165, 1, -45)
+ContentArea.Position = UDim2.new(0, 160, 0, 40)
+ContentArea.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+ContentArea.BorderSizePixel = 0
+Instance.new("UICorner", ContentArea).CornerRadius = UDim.new(0, 6)
+
+local ContentTitle = Instance.new("TextLabel", ContentArea)
+ContentTitle.Size = UDim2.new(1, -20, 0, 30)
+ContentTitle.Position = UDim2.new(0, 15, 0, 10)
+ContentTitle.BackgroundTransparency = 1
+ContentTitle.Text = "Essentials"
+ContentTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ContentTitle.TextSize = 16
+ContentTitle.Font = Enum.Font.GothamBold
+ContentTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local function createContainer()
+    local c = Instance.new("ScrollingFrame", ContentArea)
+    c.Size = UDim2.new(1, -20, 1, -50)
+    c.Position = UDim2.new(0, 15, 0, 45)
+    c.BackgroundTransparency = 1
+    c.CanvasSize = UDim2.new(0, 0, 0, 0)
+    c.ScrollBarThickness = 3
+    c.Visible = false
+
+    local l = Instance.new("UIListLayout", c)
+    l.SortOrder = Enum.SortOrder.LayoutOrder
+    l.Padding = UDim.new(0, 8)
+    l:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        c.CanvasSize = UDim2.new(0, 0, 0, l.AbsoluteContentSize.Y + 10)
+    end)
+    return c
+end
+
+local MainContainer = createContainer()
+local EssentialsContainer = createContainer()
+local EspContainer = createContainer()
+local BypassContainer = createContainer()
+
+EssentialsContainer.Visible = true
+
+local function createSectionHeader(parent, text)
+    local l = Instance.new("TextLabel", parent)
+    l.Size = UDim2.new(1, -10, 0, 24)
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = Color3.fromRGB(0, 160, 255)
+    l.TextSize = 13
+    l.Font = Enum.Font.GothamBold
+    l.TextXAlignment = Enum.TextXAlignment.Left
+end
+
+local function createToggle(parent, name, defaultColor, callback)
+    local f = Instance.new("Frame", parent)
+    f.Size = UDim2.new(1, -10, 0, 36)
+    f.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    f.BorderSizePixel = 0
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+    
+    local l = Instance.new("TextLabel", f)
+    l.Size = UDim2.new(0.6, 0, 1, 0)
+    l.Position = UDim2.new(0, 12, 0, 0)
+    l.BackgroundTransparency = 1
+    l.Text = name
+    l.TextColor3 = Color3.fromRGB(220, 220, 220)
+    l.TextSize = 13
+    l.Font = Enum.Font.GothamMedium
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local sb = Instance.new("TextButton", f)
+    sb.Size = UDim2.new(0, 40, 0, 20)
+    sb.Position = UDim2.new(1, -45, 0.5, -10)
+    sb.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    sb.Text = ""
+    sb.AutoButtonColor = false
+    Instance.new("UICorner", sb).CornerRadius = UDim.new(1, 0)
+    
+    local sh = Instance.new("Frame", sb)
+    sh.Size = UDim2.new(0, 16, 0, 16)
+    sh.Position = UDim2.new(0, 2, 0.5, -8)
+    sh.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    sh.BorderSizePixel = 0
+    Instance.new("UICorner", sh).CornerRadius = UDim.new(1, 0)
+    
+    local state = false
+    sb.MouseButton1Click:Connect(function()
+        state = not state
+        sb.BackgroundColor3 = state and Color3.fromRGB(0, 120, 255) or Color3.fromRGB(40, 40, 40)
+        sh.Position = state and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+        sh.BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+        if callback then callback(state) end
+    end)
+end
+
+local function createLightToggle(parent, name, callback)
+    local f = Instance.new("Frame", parent)
+    f.Size = UDim2.new(1, -10, 0, 36)
+    f.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    f.BorderSizePixel = 0
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+    
+    local l = Instance.new("TextLabel", f)
+    l.Size = UDim2.new(0.75, 0, 1, 0)
+    l.Position = UDim2.new(0, 12, 0, 0)
+    l.BackgroundTransparency = 1
+    l.Text = name
+    l.TextColor3 = Color3.fromRGB(220, 220, 220)
+    l.TextSize = 13
+    l.Font = Enum.Font.GothamMedium
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local sb = Instance.new("TextButton", f)
+    sb.Size = UDim2.new(0, 40, 0, 20)
+    sb.Position = UDim2.new(1, -45, 0.5, -10)
+    sb.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    sb.Text = ""
+    sb.AutoButtonColor = false
+    Instance.new("UICorner", sb).CornerRadius = UDim.new(1, 0)
+    
+    local sh = Instance.new("Frame", sb)
+    sh.Size = UDim2.new(0, 16, 0, 16)
+    sh.Position = UDim2.new(0, 2, 0.5, -8)
+    sh.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    sh.BorderSizePixel = 0
+    Instance.new("UICorner", sh).CornerRadius = UDim.new(1, 0)
+    
+    local state = false
+    sb.MouseButton1Click:Connect(function()
+        state = not state
+        sb.BackgroundColor3 = state and Color3.fromRGB(0, 120, 255) or Color3.fromRGB(40, 40, 40)
+        sh.Position = state and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+        sh.BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+        if callback then callback(state) end
+    end)
+end
+
+local function createSlider(parent, name, min, max, default, callback)
+    local f = Instance.new("Frame", parent)
+    f.Size = UDim2.new(1, -10, 0, 50)
+    f.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    f.BorderSizePixel = 0
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+    
+    local l = Instance.new("TextLabel", f)
+    l.Size = UDim2.new(0.7, 0, 0, 20)
+    l.Position = UDim2.new(0, 12, 0, 6)
+    l.BackgroundTransparency = 1
+    l.Text = name
+    l.TextColor3 = Color3.fromRGB(220, 220, 220)
+    l.TextSize = 13
+    l.Font = Enum.Font.GothamMedium
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local vl = Instance.new("TextLabel", f)
+    vl.Size = UDim2.new(0.3, -15, 0, 20)
+    vl.Position = UDim2.new(0.7, 0, 0, 6)
+    vl.BackgroundTransparency = 1
+    vl.Text = tostring(default) .. " (Önerilen: 20-30)"
+    vl.TextColor3 = Color3.fromRGB(0, 160, 255)
+    vl.TextSize = 11
+    vl.Font = Enum.Font.GothamBold
+    vl.TextXAlignment = Enum.TextXAlignment.Right
+    
+    local sb = Instance.new("Frame", f)
+    sb.Size = UDim2.new(1, -24, 0, 6)
+    sb.Position = UDim2.new(0, 12, 0, 32)
+    sb.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    sb.BorderSizePixel = 0
+    Instance.new("UICorner", sb).CornerRadius = UDim.new(1, 0)
+    
+    local fill = Instance.new("Frame", sb)
+    fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+    fill.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+    
+    local btn = Instance.new("TextButton", sb)
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+    
+    local uis = game:GetService("UserInputService")
+    local dragging = false
+    
+    btn.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+    
+    uis.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+    
+    uis.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local pos = math.clamp((input.Position.X - sb.AbsolutePosition.X) / sb.AbsoluteSize.X, 0, 1)
+            local val = math.floor(min + (max - min) * pos)
+            fill.Size = UDim2.new(pos, 0, 1, 0)
+            vl.Text = tostring(val) .. " (Önerilen: 20-30)"
+            if callback then callback(val) end
+        end
+    end)
+end
+
+local function createDropdown(parent)
+    local df = Instance.new("Frame", parent)
+    df.Size = UDim2.new(1, -10, 0, 50)
+    df.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    df.BorderSizePixel = 0
+    Instance.new("UICorner", df).CornerRadius = UDim.new(0, 6)
+    
+    local dl = Instance.new("TextLabel", df)
+    dl.Size = UDim2.new(1, -15, 0, 20)
+    dl.Position = UDim2.new(0, 12, 0, 4)
+    dl.BackgroundTransparency = 1
+    dl.Text = "Allowed Entities"
+    dl.TextColor3 = Color3.fromRGB(220, 220, 220)
+    dl.TextSize = 13
+    dl.Font = Enum.Font.GothamMedium
+    dl.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local stb = Instance.new("TextButton", df)
+    stb.Size = UDim2.new(1, -24, 0, 22)
+    stb.Position = UDim2.new(0, 12, 0, 24)
+    stb.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    stb.Text = " ---  ⌄"
+    stb.TextColor3 = Color3.fromRGB(150, 150, 150)
+    stb.TextSize = 12
+    stb.Font = Enum.Font.Gotham
+    stb.TextXAlignment = Enum.TextXAlignment.Left
+    Instance.new("UICorner", stb).CornerRadius = UDim.new(0, 4)
+end
+
+createSectionHeader(EssentialsContainer, "--- PLAYER ESSENTIALS ---")
+createToggle(EssentialsContainer, "WalkSpeed (On/Off)", Color3.fromRGB(0, 160, 255), function(s) 
+    getgenv().VoidLoSettings.Essentials.WalkSpeedEnabled = s 
+end)
+
+createSlider(EssentialsContainer, "WalkSpeed Level (Max 100)", 16, 100, 20, function(v)
+    getgenv().VoidLoSettings.Essentials.WalkSpeedLevel = v
+end)
+
+createToggle(EspContainer, "Rainbow ESP", Color3.fromRGB(255, 215, 0), function(s) 
+    getgenv().VoidLoSettings.RainbowESP = s 
+end)
+
+createSectionHeader(EspContainer, "--- ESP OPTIONS ---")
+createToggle(EspContainer, "Entities ESP", Color3.fromRGB(255, 0, 0), function(s) getgenv().VoidLoSettings.ESP.Entities = s end)
+createDropdown(EspContainer)
+createToggle(EspContainer, "Doors ESP", Color3.fromRGB(0, 255, 0), function(s) getgenv().VoidLoSettings.ESP.Doors = s end)
+createToggle(EspContainer, "Objectives ESP", Color3.fromRGB(170, 0, 255), function(s) getgenv().VoidLoSettings.ESP.Objectives = s end)
+createToggle(EspContainer, "Items ESP", Color3.fromRGB(0, 170, 255), function(s) getgenv().VoidLoSettings.ESP.Items = s end)
+createToggle(EspContainer, "Chests ESP", Color3.fromRGB(210, 160, 120), function(s) getgenv().VoidLoSettings.ESP.Chests = s end)
+createToggle(EspContainer, "Hiding Spots ESP", Color3.fromRGB(255, 105, 180), function(s) getgenv().VoidLoSettings.ESP.HidingSpots = s end)
+createToggle(EspContainer, "Players ESP", Color3.fromRGB(255, 255, 255), function(s) getgenv().VoidLoSettings.ESP.Players = s end)
+
+createSectionHeader(EspContainer, "--- TRACERS OPTIONS ---")
+createToggle(EspContainer, "Entities Tracers", Color3.fromRGB(255, 0, 0), function(s) getgenv().VoidLoSettings.Tracers.Entities = s end)
+createToggle(EspContainer, "Doors Tracers", Color3.fromRGB(0, 255, 0), function(s) getgenv().VoidLoSettings.Tracers.Doors = s end)
+createToggle(EspContainer, "Objectives Tracers", Color3.fromRGB(170, 0, 255), function(s) getgenv().VoidLoSettings.Tracers.Objectives = s end)
+createToggle(EspContainer, "Items Tracers", Color3.fromRGB(0, 170, 255), function(s) getgenv().VoidLoSettings.Tracers.Items = s end)
+createToggle(EspContainer, "Chests Tracers", Color3.fromRGB(210, 160, 120), function(s) getgenv().VoidLoSettings.Tracers.Chests = s end)
+createToggle(EspContainer, "Hiding Spots Tracers", Color3.fromRGB(255, 105, 180), function(s) getgenv().VoidLoSettings.Tracers.HidingSpots = s end)
+
+createSectionHeader(BypassContainer, "--- DOORS & MINES BYPASS ---")
+createLightToggle(BypassContainer, "Bypass Screech", function(s) getgenv().VoidLoSettings.Bypass.Screech = s end)
+createLightToggle(BypassContainer, "Bypass Eyes", function(s) getgenv().VoidLoSettings.Bypass.Eyes = s end)
+createLightToggle(BypassContainer, "Bypass Dupe", function(s) getgenv().VoidLoSettings.Bypass.Dupe = s end)
+createLightToggle(BypassContainer, "Bypass Timothy", function(s) getgenv().VoidLoSettings.Bypass.Timothy = s end)
+createLightToggle(BypassContainer, "Bypass LookMan", function(s) getgenv().VoidLoSettings.Bypass.LookMan = s end)
+createLightToggle(BypassContainer, "Bypass Void", function(s) getgenv().VoidLoSettings.Bypass.Void = s end)
+
+createSectionHeader(BypassContainer, "--- 🚫 REMOVALS (Hotel & Mines & OutDoors) ---")
+createLightToggle(BypassContainer, "Remove The Screech", function(s) getgenv().VoidLoSettings.Removals.Screech = s end)
+createLightToggle(BypassContainer, "Remove The Dread", function(s) getgenv().VoidLoSettings.Removals.Dread = s end)
+createLightToggle(BypassContainer, "Remove The Surge", function(s) getgenv().VoidLoSettings.Removals.Surge = s end)
+createLightToggle(BypassContainer, "Remove The Void", function(s) getgenv().VoidLoSettings.Removals.Void = s end)
+
+createSectionHeader(BypassContainer, "--- ⚡ PROTECTION (Hotel & Mines & Rooms & OutDoors) ---")
+createLightToggle(BypassContainer, "No Attack Screech", function(s) getgenv().VoidLoSettings.Protection.Screech = s end)
+createLightToggle(BypassContainer, "No Attack A-90", function(s) getgenv().VoidLoSettings.Protection.A90 = s end)
+createLightToggle(BypassContainer, "No Attack Void", function(s) getgenv().VoidLoSettings.Protection.Void = s end)
+createLightToggle(BypassContainer, "No Attack Surge", function(s) getgenv().VoidLoSettings.Protection.Surge = s end)
+
+local function hideAllContainers()
+    MainContainer.Visible = false
+    EssentialsContainer.Visible = false
+    EspContainer.Visible = false
+    BypassContainer.Visible = false
+end
+
+local function createTabButton(name, order, targetContainer)
+    local btn = Instance.new("TextButton", Sidebar)
+    btn.Size = UDim2.new(1, -10, 0, 32)
+    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    btn.BorderSizePixel = 0
+    btn.Text = "  " .. name
+    btn.TextColor3 = Color3.fromRGB(180, 180, 180)
+    btn.TextSize = 13
+    btn.Font = Enum.Font.GothamSemibold
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.LayoutOrder = order
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    
+    btn.MouseButton1Click:Connect(function()
+        ContentTitle.Text = name:gsub("[^%w%s]", "")
+        hideAllContainers()
+        if targetContainer then
+            targetContainer.Visible = true
+        end
+    end)
+end
+
+createTabButton("🏠 Main", 1, MainContainer)
+createTabButton("⚙️ Essentials", 2, EssentialsContainer)
+createTabButton("👁️ Esp", 3, EspContainer)
+createTabButton("🛡️ Bypass", 4, BypassContainer)
+createTabButton("🪜 Floor2", 5, nil)
+createTabButton("👑 Vip Features (+)", 6, nil)
+createTabButton("🧭 Escape", 7, nil)
+createTabButton("📶 Fps&Setting", 8, nil)
+
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+ToggleButton.Size = UDim2.new(0, 45, 0, 45)
+ToggleButton.Position = UDim2.new(0, 15, 0.5, -22)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+ToggleButton.Text = "Vøid"
+ToggleButton.TextColor3 = Color3.fromRGB(0, 160, 255)
+ToggleButton.TextSize = 12
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Active = true
+ToggleButton.Draggable = true
+Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", ToggleButton).Color = Color3.fromRGB(0, 120, 255)
+
+local isOpen = true
+ToggleButton.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    MainFrame.Visible = isOpen
+end)
+
+RunService.RenderStepped:Connect(function()
+    if getgenv().VoidLoSettings.Essentials.WalkSpeedEnabled then
+        local character = LocalPlayer.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = getgenv().VoidLoSettings.Essentials.WalkSpeedLevel
+            end
+        end
+    end
+
+    if getgenv().VoidLoSettings.Bypass.Screech then
+        local screech = Workspace:FindFirstChild("Screech") or Camera:FindFirstChild("Screech")
+        if screech then screech:Destroy() end
+    end
+    
+    if getgenv().VoidLoSettings.Bypass.Eyes then
+        local eyes = Workspace:FindFirstChild("Eyes")
+        if eyes and eyes:FindFirstChild("Core") then
+            eyes.Core.Transparency = 1
+        end
+    end
+
+    if getgenv().VoidLoSettings.Bypass.Timothy then
+        local jumpscare = PlayerGui:FindFirstChild("Jumpscare")
+        if jumpscare and jumpscare:FindFirstChild("Timothy") then
+            jumpscare:Destroy()
+        end
+    end
+
+    if getgenv().VoidLoSettings.Removals.Screech then
+        local screech = Workspace:FindFirstChild("Screech") or Camera:FindFirstChild("Screech")
+        if screech then screech:Destroy() end
+    end
+
+    if getgenv().VoidLoSettings.Removals.Dread then
+        local dread = Workspace:FindFirstChild("Dread")
+        if dread then dread:Destroy() end
+    end
+
+    if getgenv().VoidLoSettings.Removals.Surge then
+        local surge = Workspace:FindFirstChild("Surge") or Workspace:FindFirstChild("Ambush")
+        if surge then surge:Destroy() end
+    end
+
+    if getgenv().VoidLoSettings.Removals.Void then
+        local voidEntity = Workspace:FindFirstChild("Void")
+        if voidEntity then voidEntity:Destroy() end
+    end
+
+    if getgenv().VoidLoSettings.Protection.Screech then
+        local screech = Workspace:FindFirstChild("Screech") or Camera:FindFirstChild("Screech")
+        if screech then 
+            local attack = screech:FindFirstChild("Attack") or screech:FindFirstChild("Hitbox")
+            if attack then attack:Destroy() end
+        end
+    end
+
+    if getgenv().VoidLoSettings.Protection.A90 then
+        local a90 = PlayerGui:FindFirstChild("A90") or Workspace:FindFirstChild("A90")
+        if a90 then a90:Destroy() end
+    end
+
+    if getgenv().VoidLoSettings.Protection.Void then
+        local voidEnt = Workspace:FindFirstChild("Void")
+        if voidEnt then
+            local touch = voidEnt:FindFirstChild("TouchInterest") or voidEnt:FindFirstChild("Hitbox")
+            if touch then touch:Destroy() end
+        end
+    end
+
+    if getgenv().VoidLoSettings.Protection.Surge then
+        local surgeEnt = Workspace:FindFirstChild("Surge") or Workspace:FindFirstChild("Ambush")
+        if surgeEnt then
+            local hitbox = surgeEnt:FindFirstChild("Hitbox")
+            if hitbox then hitbox:Destroy() end
+        end
+    end
+end)
+
+print("VøidLø Hub V2.0 - Loadstring Sürümü Yüklendi!")
+]]--
+
+-- Delta executor ile çalıştırmak için tek satırlık loadstring kalıbı:
+-- loadstring(game:HttpGet("BURAYA_RAW_LINK_GELECEK"))()
